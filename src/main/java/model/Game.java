@@ -1,11 +1,16 @@
 package model;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.util.Random;
 
 public class Game {
 
@@ -30,6 +35,7 @@ public class Game {
         stage.show();
 
         addMouseHandler(scene);
+        startGame();
     }
 
     public Color[] getColors() {
@@ -56,8 +62,10 @@ public class Game {
 
     private void createBall() {
         double r = 8;
-        double offset = 55;
-        ball = new Ball(WINDOW_WIDTH / 2,WINDOW_HEIGHT - offset, r, Color.WHITE);
+        double x = Math.random() * (WINDOW_WIDTH - 2 * r) + r;
+        double y = WINDOW_HEIGHT / 2;
+        double dir = new Random().nextBoolean() ? -1 : 1;
+        ball = new Ball(x, y, r, dir, Color.WHITE);
         ball.draw(graphicsContext);
     }
 
@@ -104,5 +112,18 @@ public class Game {
                 bricks[i][j].draw(graphicsContext);
             }
         }
+    }
+
+    private void startGame() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void updateGame() {
+        ball.move();
+        ball.collideWall(WINDOW_WIDTH, WINDOW_HEIGHT);
+        ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
+        redraw();
     }
 }

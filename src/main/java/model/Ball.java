@@ -3,23 +3,58 @@ package model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.Random;
+
 public class Ball {
 
     private double x;
     private double y;
     private double r;
+    private double dirX;
+    private double dirY;
     private Color color;
+    private static final double SPEED = 2.5;
 
-    public Ball(double x, double y, double r, Color color) {
+    public Ball(double x, double y, double r, double dir, Color color) {
         this.x = x;
         this.y = y;
         this.r = r;
+        this.dirX = dir;
+        this.dirY = 1;
         this.color = color;
     }
 
     public void draw(GraphicsContext graphicsContext) {
         graphicsContext.setFill(color);
         graphicsContext.fillOval(x - r, y - r, 2 * r, 2 * r);
+    }
+
+    public void move() {
+        x += dirX * SPEED;
+        y += dirY * SPEED;
+    }
+
+    public void collideWall(double windowWidth, double windowHeight) {
+        if (x <= r || x >= windowWidth - r) {
+            dirX *= -1;
+        }
+        if (y <= r) {
+            dirY = 1;
+        }
+        if (y >= windowHeight - r) {
+            x = Math.random() * (windowWidth - 2 * r) + r;
+            y = windowHeight / 2;
+            dirX = new Random().nextBoolean() ? -1 : 1;
+            dirY = 1;
+        }
+    }
+
+    public void collidePaddle(double paddleX, double paddleY, double paddleWidth, double paddleHeight) {
+        if (y + r >= paddleY && y <= paddleY + paddleHeight) {
+            if (x + r >= paddleX && x <= paddleX + paddleWidth) {
+                dirY = -1;
+            }
+        }
     }
 
     public double getX() {
@@ -52,5 +87,21 @@ public class Ball {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public double getDirX() {
+        return dirX;
+    }
+
+    public void setDirX(double dirX) {
+        this.dirX = dirX;
+    }
+
+    public double getDirY() {
+        return dirY;
+    }
+
+    public void setDirY(double dirY) {
+        this.dirY = dirY;
     }
 }
