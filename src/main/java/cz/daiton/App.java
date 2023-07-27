@@ -2,10 +2,12 @@ package cz.daiton;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import model.Game;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,37 +22,22 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         setProperties(stage);
-        setStage(stage);
+        Game game = new Game();
+        game.setUp(stage);
     }
 
-    public static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
-    private static Image loadIcon(String icon) throws IOException {
-        InputStream is = App.class.getResourceAsStream(icon);
+    private static Image loadIcon() throws IOException {
+        InputStream is = App.class.getResourceAsStream("icon.png");
         return new Image(is);
     }
 
     private static void setProperties(Stage stage) throws IOException {
         stage.setResizable(false);
         stage.setTitle("Breakout");
-        stage.getIcons().add(loadIcon("icon.png"));
-    }
-
-    private static void setStage(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 1000, 800);
-        stage.setScene(scene);
-        stage.show();
+        stage.getIcons().add(loadIcon());
     }
 
     public static void main(String[] args) {
         launch();
     }
-
 }
