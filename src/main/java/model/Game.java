@@ -12,8 +12,10 @@ public class Game {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
     private Brick[][] bricks;
+    private Paddle paddle;
+    private Ball ball;
     private static final double WINDOW_WIDTH = 960;
-    private static final double WINDOW_HEIGHT = 500;
+    private static final double WINDOW_HEIGHT = 550;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -26,6 +28,8 @@ public class Game {
         Scene scene = new Scene(group, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();
+
+        addMouseHandler(scene);
     }
 
     public Color[] getColors() {
@@ -51,12 +55,16 @@ public class Game {
     }
 
     private void createBall() {
-        Ball ball = new Ball(WINDOW_WIDTH / 2,WINDOW_HEIGHT - 120,8, Color.WHITE);
+        double r = 8;
+        double offset = 55;
+        ball = new Ball(WINDOW_WIDTH / 2,WINDOW_HEIGHT - offset, r, Color.WHITE);
         ball.draw(graphicsContext);
     }
 
     private void createPaddle() {
-        Paddle paddle = new Paddle(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 40, 150, 20, Color.WHITE);
+        double w = 120;
+        double h = 40;
+        paddle = new Paddle((WINDOW_WIDTH / 2) - (w / 2), WINDOW_HEIGHT - h, w, 15, Color.WHITE);
         paddle.draw(graphicsContext);
     }
 
@@ -72,6 +80,27 @@ public class Game {
                 double x = offset + i * (w + offset);
                 double y = offset + j * (h + offset);
                 bricks[i][j] = new Brick(x, y, w, h, colors[j]);
+                bricks[i][j].draw(graphicsContext);
+            }
+        }
+    }
+
+    private void addMouseHandler(Scene scene) {
+        scene.setOnMouseMoved(e -> {
+            paddle.move(e.getX(), WINDOW_WIDTH);
+            redraw();
+        });
+
+    }
+
+    private void redraw() {
+        graphicsContext.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        paddle.draw(graphicsContext);
+        ball.draw(graphicsContext);
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 10; j++) {
                 bricks[i][j].draw(graphicsContext);
             }
         }

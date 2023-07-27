@@ -21,7 +21,14 @@ public class Paddle {
 
     public void draw(GraphicsContext graphicsContext) {
         graphicsContext.setFill(color);
-        graphicsContext.fillRect(x - (w / 2), y - (h / 2), w, h);
+        graphicsContext.fillRect(x, y, w, h);
+    }
+
+    public void move(double mouseX, double windowWidth) {
+        double minX = 0;
+        double maxX = windowWidth - w;
+        double newX = Math.min(Math.max(mouseX - w / 2, minX), maxX);
+        setX(newX);
     }
 
     public double getX() {
