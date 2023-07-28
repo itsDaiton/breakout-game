@@ -40,12 +40,6 @@ public class Ball {
         if (y <= r) {
             dirY = 1;
         }
-        if (y >= Settings.WINDOW_HEIGHT - r) {
-            x = Math.random() * (Settings.WINDOW_WIDTH - 2 * r) + r;
-            y = Settings.WINDOW_HEIGHT / 2;
-            dirX = new Random().nextBoolean() ? -1 : 1;
-            dirY = 1;
-        }
     }
 
     public void collidePaddle(double paddleX, double paddleY, double paddleWidth, double paddleHeight) {
@@ -99,6 +93,13 @@ public class Ball {
                 }
             }
         }
+    }
+
+    public void reset() {
+        x = Math.random() * (Settings.WINDOW_WIDTH - 2 * r) + r;
+        y = Settings.WINDOW_HEIGHT / 2;
+        dirX = new Random().nextBoolean() ? -1 : 1;
+        dirY = 1;
     }
 
     public double getX() {

@@ -126,5 +126,18 @@ public class Game {
         ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
         ball.collideBrick(bricks);
         redraw();
+
+        if (ball.getY() + ball.getR() >= Settings.WINDOW_HEIGHT) {
+            resetGame();
+        }
+    }
+
+    private void resetGame() {
+        ball.reset();
+        for (int i = 0; i < bricks.length; i++) {
+            for (int j = 0; j < bricks[i].length; j++) {
+                bricks[i][j].setDestroyed(false);
+            }
+        }
     }
 }
