@@ -21,8 +21,6 @@ public class Game {
     private Brick[][] bricks;
     private Paddle paddle;
     private Ball ball;
-    private int score = 0;
-    private int lives = 3;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -146,13 +144,14 @@ public class Game {
                 bricks[i][j].setDestroyed(false);
             }
         }
+        Stats.decreaseLives();
     }
 
     private void drawGameState() {
         Font fontPoppins = Font.font("Poppins", FontWeight.NORMAL, 28);
         graphicsContext.setFont(fontPoppins);
         graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillText("SCORE " + score, 20, 40);
-        graphicsContext.fillText("LIVES " + lives, Settings.CANVAS_WIDTH - 110, 40);
+        graphicsContext.fillText("SCORE " + Stats.getScore(), 20, 40);
+        graphicsContext.fillText("LIVES " + Stats.getLives(), Settings.CANVAS_WIDTH - 110, 40);
     }
 }
