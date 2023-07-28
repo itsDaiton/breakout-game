@@ -34,10 +34,10 @@ public class Ball {
     }
 
     public void collideWall() {
-        if (x <= r || x >= Settings.WINDOW_WIDTH - r) {
+        if (x <= r || x >= Settings.CANVAS_WIDTH - r) {
             dirX *= -1;
         }
-        if (y <= r) {
+        if (y - Settings.TOP_OFFSET <= r) {
             dirY = 1;
         }
     }
@@ -96,8 +96,8 @@ public class Ball {
     }
 
     public void reset() {
-        x = Math.random() * (Settings.WINDOW_WIDTH - 2 * r) + r;
-        y = Settings.WINDOW_HEIGHT / 2;
+        x = Math.random() * (Settings.CANVAS_WIDTH - 2 * r) + r;
+        y = Settings.CANVAS_HEIGHT / 2;
         dirX = new Random().nextBoolean() ? -1 : 1;
         dirY = 1;
     }

@@ -26,7 +26,7 @@ public class Paddle {
 
     public void move(double mouseX) {
         double minX = 0;
-        double maxX = Settings.WINDOW_WIDTH - w;
+        double maxX = Settings.CANVAS_WIDTH - w;
         double newX = Math.min(Math.max(mouseX - w / 2, minX), maxX);
         setX(newX);
     }

@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -19,6 +21,8 @@ public class Game {
     private Brick[][] bricks;
     private Paddle paddle;
     private Ball ball;
+    private int score = 0;
+    private int lives = 3;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -26,6 +30,8 @@ public class Game {
         createPaddle();
         createBricks();
         getColors();
+
+        Font.loadFont(getClass().getResourceAsStream("Poppins-Regular.ttf"), 18);
 
         Group group = new Group(canvas);
         Scene scene = new Scene(group, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
@@ -52,16 +58,16 @@ public class Game {
     }
 
     private void createCanvas() {
-        canvas = new Canvas(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+        canvas = new Canvas(Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
         graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillRect(0,0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+        graphicsContext.fillRect(0,0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
     }
 
     private void createBall() {
         double r = Settings.BALL_RADIUS;
-        double x = Math.random() * (Settings.WINDOW_WIDTH - 2 * r) + r;
-        double y = Settings.WINDOW_HEIGHT / 2;
+        double x = Math.random() * (Settings.CANVAS_WIDTH - 2 * r) + r;
+        double y = Settings.CANVAS_HEIGHT / 2;
         double dir = new Random().nextBoolean() ? -1 : 1;
         ball = new Ball(x, y, r, dir, Color.WHITE);
         ball.draw(graphicsContext);
@@ -70,8 +76,8 @@ public class Game {
     private void createPaddle() {
         double w = Settings.PADDLE_WIDTH;
         double h = Settings.PADDLE_HEIGHT;
-        double x = (Settings.WINDOW_WIDTH / 2) - (w / 2);
-        double y = Settings.WINDOW_HEIGHT - Settings.PADDLE_OFFSET;
+        double x = (Settings.CANVAS_WIDTH / 2) - (w / 2);
+        double y = Settings.CANVAS_HEIGHT - Settings.PADDLE_OFFSET;
         paddle = new Paddle(x, y, w, h, Color.WHITE);
         paddle.draw(graphicsContext);
     }
@@ -83,7 +89,7 @@ public class Game {
         for (int i = 0; i < Settings.BRICK_ROWS; i++) {
             for (int j = 0; j < Settings.BRICK_COLUMNS; j++) {
                 double x = Settings.BRICK_OFFSET + i * (Settings.BRICK_WIDTH + Settings.BRICK_OFFSET);
-                double y = Settings.BRICK_OFFSET + j * (Settings.BRICK_HEIGHT + Settings.BRICK_OFFSET);
+                double y = Settings.BRICKS_GRID_OFFSET + Settings.BRICK_OFFSET + j * (Settings.BRICK_HEIGHT + Settings.BRICK_OFFSET);
                 bricks[i][j] = new Brick(x, y, Settings.BRICK_WIDTH, Settings.BRICK_HEIGHT, colors[j]);
                 bricks[i][j].draw(graphicsContext);
             }
@@ -98,9 +104,9 @@ public class Game {
     }
 
     private void redraw() {
-        graphicsContext.clearRect(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+        graphicsContext.clearRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT);
         graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillRect(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+        graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
 
         paddle.draw(graphicsContext);
         ball.draw(graphicsContext);
@@ -112,6 +118,7 @@ public class Game {
                 }
             }
         }
+        drawGameState();
     }
 
     private void startGame() {
@@ -127,7 +134,7 @@ public class Game {
         ball.collideBrick(bricks);
         redraw();
 
-        if (ball.getY() + ball.getR() >= Settings.WINDOW_HEIGHT) {
+        if (ball.getY() + ball.getR() >= Settings.CANVAS_HEIGHT) {
             resetGame();
         }
     }
@@ -139,5 +146,13 @@ public class Game {
                 bricks[i][j].setDestroyed(false);
             }
         }
+    }
+
+    private void drawGameState() {
+        Font fontPoppins = Font.font("Poppins", FontWeight.NORMAL, 28);
+        graphicsContext.setFont(fontPoppins);
+        graphicsContext.setFill(Color.WHITE);
+        graphicsContext.fillText("SCORE " + score, 20, 40);
+        graphicsContext.fillText("LIVES " + lives, Settings.CANVAS_WIDTH - 110, 40);
     }
 }
