@@ -13,7 +13,6 @@ public class Ball {
     private double dirX;
     private double dirY;
     private Color color;
-    private static final double SPEED = 2.5;
 
     public Ball(double x, double y, double r, double dir, Color color) {
         this.x = x;
@@ -30,20 +29,20 @@ public class Ball {
     }
 
     public void move() {
-        x += dirX * SPEED;
-        y += dirY * SPEED;
+        x += dirX * Settings.BALL_SPEED;
+        y += dirY * Settings.BALL_SPEED;
     }
 
-    public void collideWall(double windowWidth, double windowHeight) {
-        if (x <= r || x >= windowWidth - r) {
+    public void collideWall() {
+        if (x <= r || x >= Settings.WINDOW_WIDTH - r) {
             dirX *= -1;
         }
         if (y <= r) {
             dirY = 1;
         }
-        if (y >= windowHeight - r) {
-            x = Math.random() * (windowWidth - 2 * r) + r;
-            y = windowHeight / 2;
+        if (y >= Settings.WINDOW_HEIGHT - r) {
+            x = Math.random() * (Settings.WINDOW_WIDTH - 2 * r) + r;
+            y = Settings.WINDOW_HEIGHT / 2;
             dirX = new Random().nextBoolean() ? -1 : 1;
             dirY = 1;
         }

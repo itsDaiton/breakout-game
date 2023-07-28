@@ -24,9 +24,9 @@ public class Paddle {
         graphicsContext.fillRect(x, y, w, h);
     }
 
-    public void move(double mouseX, double windowWidth) {
+    public void move(double mouseX) {
         double minX = 0;
-        double maxX = windowWidth - w;
+        double maxX = Settings.WINDOW_WIDTH - w;
         double newX = Math.min(Math.max(mouseX - w / 2, minX), maxX);
         setX(newX);
     }
