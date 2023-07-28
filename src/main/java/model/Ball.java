@@ -57,6 +57,51 @@ public class Ball {
         }
     }
 
+    public boolean checkBrick(Brick brick) {
+        if (brick.isDestroyed()) {
+            return false;
+        }
+
+        double brickTop = brick.getY();
+        double brickLeft = brick.getX();
+        double brickBottom = brick.getY() + brick.getH();
+        double brickRight = brick.getX() + brick.getW();
+
+        double ballTop = y - r;
+        double ballLeft = x - r;
+        double ballBottom = y + r;
+        double ballRight = x + r;
+
+        boolean collisionTop = ballBottom >= brickTop && ballLeft <= brickRight - 4.5 && ballRight >= brickLeft + 4.5 && ballBottom <= brickBottom;
+        boolean collisionLeft = ballRight >= brickRight && ballTop >= brickBottom + 4.5 && ballBottom <= brickTop - 4.5 && ballRight <= brickRight;
+        boolean collisionBottom = ballTop <= brickBottom && ballLeft <= brickRight - 4.5 && ballRight >= brickLeft + 4.5 && ballTop >= brickTop;
+        boolean collisionRight = ballLeft <= brickRight && ballTop >= brickBottom + 4.5 && ballBottom <= brickTop - 4.5 && ballLeft >= brickLeft;
+
+        boolean collided = collisionTop || collisionLeft || collisionBottom || collisionRight;
+
+        if (collided) {
+            if (collisionTop || collisionBottom) {
+                dirY *= -1;
+            }
+            if (collisionLeft || collisionRight) {
+                dirX *= -1;
+            }
+        }
+
+        return collided;
+    }
+
+    public void collideBrick(Brick[][] bricks) {
+        for (int i = 0; i < bricks.length; i++) {
+            for (int j = 0; j < bricks[i].length; j++) {
+                Brick brick = bricks[i][j];
+                if (checkBrick(brick)) {
+                    brick.setDestroyed(true);
+                }
+            }
+        }
+    }
+
     public double getX() {
         return x;
     }

@@ -10,6 +10,7 @@ public class Brick {
     private double w;
     private double h;
     private Color color;
+    private boolean destroyed = false;
 
     public Brick(double x, double y, double w, double h, Color color) {
         this.x = x;
@@ -20,8 +21,10 @@ public class Brick {
     }
 
     public void draw(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(color);
-        graphicsContext.fillRect(x, y, w, h);
+        if (!destroyed) {
+            graphicsContext.setFill(color);
+            graphicsContext.fillRect(x, y, w, h);
+        }
     }
 
     public double getX() {
@@ -62,5 +65,13 @@ public class Brick {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
     }
 }

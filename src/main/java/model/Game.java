@@ -109,7 +109,10 @@ public class Game {
         ball.draw(graphicsContext);
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 10; j++) {
-                bricks[i][j].draw(graphicsContext);
+                Brick brick = bricks[i][j];
+                if (!brick.isDestroyed()) {
+                    bricks[i][j].draw(graphicsContext);
+                }
             }
         }
     }
@@ -124,6 +127,7 @@ public class Game {
         ball.move();
         ball.collideWall(WINDOW_WIDTH, WINDOW_HEIGHT);
         ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
+        ball.collideBrick(bricks);
         redraw();
     }
 }
