@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -23,6 +24,7 @@ public class Game {
     private Paddle paddle;
     private Ball ball;
     private boolean gameStarted = false;
+    private boolean isPaused = false;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -102,7 +104,7 @@ public class Game {
 
     private void addMouseHandler(Scene scene) {
         scene.setOnMouseMoved(e -> {
-            if (gameStarted) {
+            if (gameStarted && !isPaused) {
                 paddle.move(e.getX());
                 redraw();
             }
@@ -116,6 +118,11 @@ public class Game {
                 redraw();
                 startGame();
             }
+
+            if (e.getCode() == KeyCode.P && gameStarted) {
+                isPaused = !isPaused;
+                redraw();
+            }
         });
     }
 
@@ -123,9 +130,9 @@ public class Game {
         graphicsContext.clearRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT);
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
-
         paddle.draw(graphicsContext);
         ball.draw(graphicsContext);
+
         for (int i = 0; i < Settings.BRICK_ROWS; i++) {
             for (int j = 0; j < Settings.BRICK_COLUMNS; j++) {
                 Brick brick = bricks[i][j];
@@ -135,6 +142,10 @@ public class Game {
             }
         }
         drawGameState();
+
+        if (isPaused) {
+            drawOverlay();
+        }
     }
 
     private void startGame() {
@@ -146,7 +157,7 @@ public class Game {
     }
 
     private void updateGame() {
-        if (gameStarted) {
+        if (gameStarted && !isPaused)  {
             ball.move();
             ball.collideWall();
             ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
@@ -161,9 +172,9 @@ public class Game {
 
     private void resetGame() {
         ball.reset();
-        for (int i = 0; i < bricks.length; i++) {
-            for (int j = 0; j < bricks[i].length; j++) {
-                bricks[i][j].setDestroyed(false);
+        for (Brick[] brick : bricks) {
+            for (Brick value : brick) {
+                value.setDestroyed(false);
             }
         }
         Stats.decreaseLives();
@@ -180,8 +191,39 @@ public class Game {
         if (!gameStarted) {
             graphicsContext.setFont(getFont());
             graphicsContext.setFill(Color.WHITE);
-            graphicsContext.fillText("Press 'ENTER' to start.", Settings.CANVAS_WIDTH / 2 - Settings.PADDLE_WIDTH, (Settings.CANVAS_HEIGHT / 2) + 50);
+            drawTexts("BREAKOUT GAME", "Press 'ENTER' to start.");
         }
+    }
+
+    private void drawOverlay() {
+        graphicsContext.setFill(Color.rgb(0, 0, 0, 0.6));
+        graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
+        graphicsContext.setFont(getFont());
+        graphicsContext.setFill(Color.WHITE);
+        drawTexts("PAUSED", "Press 'P' to resume.");
+    }
+
+    private void drawTexts(String s1, String s2) {
+        Text textTop = new Text(s1);
+        textTop.setFont(getFont());
+
+        Text textBottom = new Text(s2);
+        textBottom.setFont(getFont());
+
+        double textTopWidth = textTop.getLayoutBounds().getWidth();
+        double textBottomWidth = textBottom.getLayoutBounds().getWidth();
+
+        double centerX = Settings.CANVAS_WIDTH / 2;
+        double centerY = (Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET) / 2;
+
+        double textTopX = centerX - textTopWidth / 2;
+        double textTopY = centerY + 50;
+
+        double textBottomX = centerX - textBottomWidth / 2;
+        double textBottomY = centerY + 120;
+
+        graphicsContext.fillText(s1, textTopX, textTopY);
+        graphicsContext.fillText(s2, textBottomX, textBottomY);
     }
 
     private Font getFont() {
