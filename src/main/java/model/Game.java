@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -21,6 +22,7 @@ public class Game {
     private Brick[][] bricks;
     private Paddle paddle;
     private Ball ball;
+    private boolean gameStarted = false;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -28,6 +30,7 @@ public class Game {
         createPaddle();
         createBricks();
         getColors();
+        drawOpeningText();
 
         Font.loadFont(getClass().getResourceAsStream("Poppins-Regular.ttf"), 18);
 
@@ -37,6 +40,7 @@ public class Game {
         stage.show();
 
         addMouseHandler(scene);
+        addKeyHandler(scene);
         startGame();
     }
 
@@ -68,7 +72,9 @@ public class Game {
         double y = Settings.CANVAS_HEIGHT / 2;
         double dir = new Random().nextBoolean() ? -1 : 1;
         ball = new Ball(x, y, r, dir, Color.WHITE);
-        ball.draw(graphicsContext);
+        if (gameStarted) {
+            ball.draw(graphicsContext);
+        }
     }
 
     private void createPaddle() {
@@ -96,8 +102,20 @@ public class Game {
 
     private void addMouseHandler(Scene scene) {
         scene.setOnMouseMoved(e -> {
-            paddle.move(e.getX());
-            redraw();
+            if (gameStarted) {
+                paddle.move(e.getX());
+                redraw();
+            }
+        });
+    }
+
+    private void addKeyHandler(Scene scene) {
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER && !gameStarted) {
+                gameStarted = true;
+                redraw();
+                startGame();
+            }
         });
     }
 
@@ -120,20 +138,24 @@ public class Game {
     }
 
     private void startGame() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        if (gameStarted) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        }
     }
 
     private void updateGame() {
-        ball.move();
-        ball.collideWall();
-        ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
-        ball.collideBrick(bricks);
-        redraw();
+        if (gameStarted) {
+            ball.move();
+            ball.collideWall();
+            ball.collidePaddle(paddle.getX(), paddle.getY(), paddle.getW(), paddle.getH());
+            ball.collideBrick(bricks);
+            redraw();
 
-        if (ball.getY() + ball.getR() >= Settings.CANVAS_HEIGHT) {
-            resetGame();
+            if (ball.getY() + ball.getR() >= Settings.CANVAS_HEIGHT) {
+                resetGame();
+            }
         }
     }
 
@@ -148,10 +170,21 @@ public class Game {
     }
 
     private void drawGameState() {
-        Font fontPoppins = Font.font("Poppins", FontWeight.NORMAL, 28);
-        graphicsContext.setFont(fontPoppins);
+        graphicsContext.setFont(getFont());
         graphicsContext.setFill(Color.WHITE);
         graphicsContext.fillText("SCORE " + Stats.getScore(), 20, 40);
         graphicsContext.fillText("LIVES " + Stats.getLives(), Settings.CANVAS_WIDTH - 110, 40);
+    }
+
+    private void drawOpeningText() {
+        if (!gameStarted) {
+            graphicsContext.setFont(getFont());
+            graphicsContext.setFill(Color.WHITE);
+            graphicsContext.fillText("Press 'ENTER' to start.", Settings.CANVAS_WIDTH / 2 - Settings.PADDLE_WIDTH, (Settings.CANVAS_HEIGHT / 2) + 50);
+        }
+    }
+
+    private Font getFont() {
+        return Font.font("Poppins", FontWeight.NORMAL, 28);
     }
 }
