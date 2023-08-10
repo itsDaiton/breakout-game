@@ -9,14 +9,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.Random;
 
-public class Game {
+public class  Game {
 
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -32,8 +30,7 @@ public class Game {
         createBall();
         createPaddle();
         createBricks();
-        getColors();
-        drawOpeningText();
+        CanvasRenderer.drawOpeningText(graphicsContext, gameStarted);
 
         Font.loadFont(getClass().getResourceAsStream("Poppins-Regular.ttf"), 18);
 
@@ -45,21 +42,6 @@ public class Game {
         addMouseHandler(scene);
         addKeyHandler(scene);
         startGame();
-    }
-
-    public Color[] getColors() {
-        return new Color[]{
-                Color.RED,
-                Color.CORAL,
-                Color.ORANGE,
-                Color.YELLOW,
-                Color.GREENYELLOW,
-                Color.GREEN,
-                Color.AQUAMARINE,
-                Color.DEEPSKYBLUE,
-                Color.BLUE,
-                Color.PURPLE
-        };
     }
 
     private void createCanvas() {
@@ -91,7 +73,7 @@ public class Game {
 
     private void createBricks() {
         bricks = new Brick[Settings.BRICK_COLUMNS][Settings.BRICK_ROWS];
-        Color[] colors = getColors();
+        Color[] colors = CanvasRenderer.getColors();
 
         for (int i = 0; i < Settings.BRICK_COLUMNS; i++) {
             for (int j = 0; j < Settings.BRICK_ROWS; j++) {
@@ -143,10 +125,10 @@ public class Game {
                 }
             }
         }
-        drawGameState();
+        CanvasRenderer.drawGameState(graphicsContext);
 
         if (isPaused) {
-            drawPauseScreen();
+            CanvasRenderer.drawPauseScreen(graphicsContext);
         }
     }
 
@@ -179,7 +161,7 @@ public class Game {
 
     private void endGame() {
         gameStarted = false;
-        drawEndScreen();
+        CanvasRenderer.drawEndScreen(graphicsContext);
     }
 
     private void resetGame() {
@@ -190,89 +172,6 @@ public class Game {
             }
         }
         Stats.reset();
-    }
-
-    private void drawGameState() {
-        graphicsContext.setFont(getFont());
-        graphicsContext.setFill(Color.WHITE);
-        graphicsContext.fillText("SCORE " + Stats.getScore(), 20, 40);
-        graphicsContext.fillText("LIVES " + Stats.getLives(), Settings.CANVAS_WIDTH - 110, 40);
-    }
-
-    private void drawOpeningText() {
-        if (!gameStarted) {
-            graphicsContext.setFont(getFont());
-            graphicsContext.setFill(Color.WHITE);
-            drawTexts(
-                    "Destroy all bricks to win the game.",
-                    "Press 'ENTER' to play.",
-                    null
-            );
-        }
-    }
-
-    private void drawEndScreen() {
-        drawOverlay();
-        drawTexts(
-                "GAME OVER",
-                "Score: " + Stats.getScore(),
-                "Press 'Enter' to play again."
-        );
-    }
-
-    private void drawPauseScreen() {
-        drawOverlay();
-        drawTexts(
-                "PAUSED",
-                "Press 'P' to resume.",
-                null
-        );
-    }
-
-    private void drawOverlay() {
-        graphicsContext.setFill(Color.rgb(0, 0, 0, 0.6));
-        graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
-        graphicsContext.setFont(getFont());
-        graphicsContext.setFill(Color.WHITE);
-    }
-
-    private void drawTexts(String s1, String s2, String s3) {
-        Text textTop = new Text(s1);
-        textTop.setFont(getFont());
-
-        Text textBottom = new Text(s2);
-        textBottom.setFont(getFont());
-
-        double textTopWidth = textTop.getLayoutBounds().getWidth();
-        double textBottomWidth = textBottom.getLayoutBounds().getWidth();
-
-        double centerX = Settings.CANVAS_WIDTH / 2;
-        double centerY = (Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET) / 2;
-
-        double textTopX = centerX - textTopWidth / 2;
-        double textTopY = centerY + 50;
-
-        double textBottomX = centerX - textBottomWidth / 2;
-        double textBottomY = centerY + 120;
-
-        graphicsContext.fillText(s1, textTopX, textTopY);
-        graphicsContext.fillText(s2, textBottomX, textBottomY);
-
-        if (s3 != null && !s3.isEmpty()) {
-            Text textThird = new Text(s3);
-            textThird.setFont(getFont());
-
-            double textThirdWidth = textThird.getLayoutBounds().getWidth();
-
-            double textThirdX = centerX - textThirdWidth / 2;
-            double textThirdY = centerY + 190;
-
-            graphicsContext.fillText(s3, textThirdX, textThirdY);
-        }
-    }
-
-    private Font getFont() {
-        return Font.font("Poppins", FontWeight.NORMAL, 28);
     }
 
     private void stopGameLoop() {
