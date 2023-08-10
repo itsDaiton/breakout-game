@@ -89,14 +89,14 @@ public class Game {
     }
 
     private void createBricks() {
-        bricks = new Brick[Settings.BRICK_ROWS][Settings.BRICK_COLUMNS];
+        bricks = new Brick[Settings.BRICK_COLUMNS][Settings.BRICK_ROWS];
         Color[] colors = getColors();
 
-        for (int i = 0; i < Settings.BRICK_ROWS; i++) {
-            for (int j = 0; j < Settings.BRICK_COLUMNS; j++) {
+        for (int i = 0; i < Settings.BRICK_COLUMNS; i++) {
+            for (int j = 0; j < Settings.BRICK_ROWS; j++) {
                 double x = Settings.BRICK_OFFSET + i * (Settings.BRICK_WIDTH + Settings.BRICK_OFFSET);
                 double y = Settings.BRICKS_GRID_OFFSET + Settings.BRICK_OFFSET + j * (Settings.BRICK_HEIGHT + Settings.BRICK_OFFSET);
-                bricks[i][j] = new Brick(x, y, Settings.BRICK_WIDTH, Settings.BRICK_HEIGHT, colors[j]);
+                bricks[i][j] = new Brick(x, y, Settings.BRICK_WIDTH, Settings.BRICK_HEIGHT, colors[j], j);
                 bricks[i][j].draw(graphicsContext);
             }
         }
@@ -133,8 +133,8 @@ public class Game {
         paddle.draw(graphicsContext);
         ball.draw(graphicsContext);
 
-        for (int i = 0; i < Settings.BRICK_ROWS; i++) {
-            for (int j = 0; j < Settings.BRICK_COLUMNS; j++) {
+        for (int i = 0; i < Settings.BRICK_COLUMNS; i++) {
+            for (int j = 0; j < Settings.BRICK_ROWS; j++) {
                 Brick brick = bricks[i][j];
                 if (!brick.isDestroyed()) {
                     bricks[i][j].draw(graphicsContext);
@@ -178,6 +178,7 @@ public class Game {
             }
         }
         Stats.decreaseLives();
+        Stats.reset();
     }
 
     private void drawGameState() {
@@ -191,7 +192,7 @@ public class Game {
         if (!gameStarted) {
             graphicsContext.setFont(getFont());
             graphicsContext.setFill(Color.WHITE);
-            drawTexts("BREAKOUT GAME", "Press 'ENTER' to start.");
+            drawTexts("Destroy all blocks to win the game.", "Press 'ENTER' to play.");
         }
     }
 

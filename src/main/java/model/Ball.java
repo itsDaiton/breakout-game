@@ -90,7 +90,7 @@ public class Ball {
                 Brick brick = bricks[i][j];
                 if (checkBrick(brick)) {
                     brick.setDestroyed(true);
-                    Stats.increaseScore();
+                    Stats.increaseScore(brick.getScore());
                 }
             }
         }

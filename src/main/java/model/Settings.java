@@ -16,8 +16,8 @@ public class Settings {
     public static final double BRICK_WIDTH = 75;
     public static final double BRICK_HEIGHT = 20;
     public static final double BRICK_OFFSET = 4.5;
-    public static final int BRICK_ROWS = 12;
-    public static final int BRICK_COLUMNS = 10;
+    public static final int BRICK_ROWS = 10;
+    public static final int BRICK_COLUMNS = 12;
     public static final double BRICKS_GRID_OFFSET = 75;
 
     private Settings() {

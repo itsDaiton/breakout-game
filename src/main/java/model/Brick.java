@@ -11,13 +11,15 @@ public class Brick {
     private double h;
     private Color color;
     private boolean destroyed = false;
+    private int score;
 
-    public Brick(double x, double y, double w, double h, Color color) {
+    public Brick(double x, double y, double w, double h, Color color, int row) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.color = color;
+        this.score = Settings.BRICK_ROWS - row;
     }
 
     public void draw(GraphicsContext graphicsContext) {
@@ -73,5 +75,13 @@ public class Brick {
 
     public void setDestroyed(boolean destroyed) {
         this.destroyed = destroyed;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

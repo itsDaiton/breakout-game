@@ -9,8 +9,8 @@ public class Stats {
         return score;
     }
 
-    public static void increaseScore() {
-        Stats.score++;
+    public static void increaseScore(int score) {
+        Stats.score += score;
     }
 
     public static int getLives() {
