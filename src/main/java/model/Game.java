@@ -25,6 +25,7 @@ public class Game {
     private Ball ball;
     private boolean gameStarted = false;
     private boolean isPaused = false;
+    private Timeline gameLoop;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -115,10 +116,11 @@ public class Game {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER && !gameStarted) {
                 gameStarted = true;
+                resetGame();
+                stopGameLoop();
                 redraw();
                 startGame();
             }
-
             if (e.getCode() == KeyCode.P && gameStarted) {
                 isPaused = !isPaused;
                 redraw();
@@ -144,15 +146,15 @@ public class Game {
         drawGameState();
 
         if (isPaused) {
-            drawOverlay();
+            drawPauseScreen();
         }
     }
 
     private void startGame() {
         if (gameStarted) {
-            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
+            gameLoop = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
+            gameLoop.setCycleCount(Timeline.INDEFINITE);
+            gameLoop.play();
         }
     }
 
@@ -165,9 +167,19 @@ public class Game {
             redraw();
 
             if (ball.getY() + ball.getR() >= Settings.CANVAS_HEIGHT) {
-                resetGame();
+                Stats.decreaseLives();
+                ball.reset();
             }
-        }
+
+            if (Stats.getLives() <= 0) {
+                endGame();
+            }
+         }
+    }
+
+    private void endGame() {
+        gameStarted = false;
+        drawEndScreen();
     }
 
     private void resetGame() {
@@ -177,7 +189,6 @@ public class Game {
                 value.setDestroyed(false);
             }
         }
-        Stats.decreaseLives();
         Stats.reset();
     }
 
@@ -192,8 +203,30 @@ public class Game {
         if (!gameStarted) {
             graphicsContext.setFont(getFont());
             graphicsContext.setFill(Color.WHITE);
-            drawTexts("Destroy all blocks to win the game.", "Press 'ENTER' to play.");
+            drawTexts(
+                    "Destroy all bricks to win the game.",
+                    "Press 'ENTER' to play.",
+                    null
+            );
         }
+    }
+
+    private void drawEndScreen() {
+        drawOverlay();
+        drawTexts(
+                "GAME OVER",
+                "Score: " + Stats.getScore(),
+                "Press 'Enter' to play again."
+        );
+    }
+
+    private void drawPauseScreen() {
+        drawOverlay();
+        drawTexts(
+                "PAUSED",
+                "Press 'P' to resume.",
+                null
+        );
     }
 
     private void drawOverlay() {
@@ -201,10 +234,9 @@ public class Game {
         graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
         graphicsContext.setFont(getFont());
         graphicsContext.setFill(Color.WHITE);
-        drawTexts("PAUSED", "Press 'P' to resume.");
     }
 
-    private void drawTexts(String s1, String s2) {
+    private void drawTexts(String s1, String s2, String s3) {
         Text textTop = new Text(s1);
         textTop.setFont(getFont());
 
@@ -225,9 +257,27 @@ public class Game {
 
         graphicsContext.fillText(s1, textTopX, textTopY);
         graphicsContext.fillText(s2, textBottomX, textBottomY);
+
+        if (s3 != null && !s3.isEmpty()) {
+            Text textThird = new Text(s3);
+            textThird.setFont(getFont());
+
+            double textThirdWidth = textThird.getLayoutBounds().getWidth();
+
+            double textThirdX = centerX - textThirdWidth / 2;
+            double textThirdY = centerY + 190;
+
+            graphicsContext.fillText(s3, textThirdX, textThirdY);
+        }
     }
 
     private Font getFont() {
         return Font.font("Poppins", FontWeight.NORMAL, 28);
+    }
+
+    private void stopGameLoop() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
     }
 }
