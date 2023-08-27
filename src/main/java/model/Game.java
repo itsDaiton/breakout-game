@@ -192,11 +192,12 @@ public class  Game {
 
     private void winGame() {
         gameStarted = false;
+        mediaPlayer.stop();
         CanvasRenderer.drawWinScreen(graphicsContext);
     }
 
     private boolean checkForWin() {
-        for (int i = 0; i < Settings.BRICK_ROWS; i++) {
+        for (int i = 0; i < Settings.BRICK_COLUMNS; i++) {
             for (int j = 0; j < Settings.BRICK_ROWS; j++) {
                 if (!bricks[i][j].isDestroyed()) {
                     return false;
