@@ -10,7 +10,7 @@ public class CanvasRenderer {
 
     public static void drawOpeningText(GraphicsContext graphicsContext, boolean gameStarted) {
         if (!gameStarted) {
-            graphicsContext.setFont(getFont());
+            graphicsContext.setFont(getFont(FontWeight.NORMAL));
             graphicsContext.setFill(Color.WHITE);
             drawTexts(
                     graphicsContext,
@@ -21,7 +21,7 @@ public class CanvasRenderer {
         }
     }
     public static void drawGameState(GraphicsContext graphicsContext) {
-        graphicsContext.setFont(getFont());
+        graphicsContext.setFont(getFont(FontWeight.BOLD));
         graphicsContext.setFill(Color.WHITE);
         graphicsContext.fillText("SCORE " + Stats.getScore(), 20, 40);
         graphicsContext.fillText("LIVES " + Stats.getLives(), Settings.CANVAS_WIDTH - 110, 40);
@@ -61,16 +61,16 @@ public class CanvasRenderer {
     public static void drawOverlay(GraphicsContext graphicsContext) {
         graphicsContext.setFill(Color.rgb(0, 0, 0, 0.6));
         graphicsContext.fillRect(0, 0, Settings.CANVAS_WIDTH, Settings.CANVAS_HEIGHT + Settings.TOP_OFFSET);
-        graphicsContext.setFont(getFont());
+        graphicsContext.setFont(getFont(FontWeight.NORMAL));
         graphicsContext.setFill(Color.WHITE);
     }
 
     public static void drawTexts(GraphicsContext graphicsContext, String s1, String s2, String s3) {
         Text textTop = new Text(s1);
-        textTop.setFont(getFont());
+        textTop.setFont(getFont(FontWeight.NORMAL));
 
         Text textBottom = new Text(s2);
-        textBottom.setFont(getFont());
+        textBottom.setFont(getFont(FontWeight.NORMAL));
 
         double textTopWidth = textTop.getLayoutBounds().getWidth();
         double textBottomWidth = textBottom.getLayoutBounds().getWidth();
@@ -89,7 +89,7 @@ public class CanvasRenderer {
 
         if (s3 != null && !s3.isEmpty()) {
             Text textThird = new Text(s3);
-            textThird.setFont(getFont());
+            textThird.setFont(getFont(FontWeight.NORMAL));
 
             double textThirdWidth = textThird.getLayoutBounds().getWidth();
 
@@ -115,7 +115,7 @@ public class CanvasRenderer {
         };
     }
 
-    private static Font getFont() {
-        return Font.font("Poppins", FontWeight.NORMAL, 28);
+    private static Font getFont(FontWeight fontWeight) {
+        return Font.font("Poppins", fontWeight, 28);
     }
 }

@@ -168,6 +168,7 @@ public class  Game {
             }
 
             if (Stats.getLives() <= 0) {
+                redraw();
                 endGame();
             }
          }
