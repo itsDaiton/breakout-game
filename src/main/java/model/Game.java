@@ -112,6 +112,12 @@ public class  Game {
                 isPaused = !isPaused;
                 redraw();
             }
+            if (e.getCode() == KeyCode.R) {
+                resetGame();
+                stopGameLoop();
+                redraw();
+                startGame();
+            }
         });
     }
 
@@ -229,5 +235,10 @@ public class  Game {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
+    }
+
+    private void resetMusic() {
+        mediaPlayer.stop();
+        mediaPlayer.play();
     }
 }
