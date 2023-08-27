@@ -1,9 +1,7 @@
 package cz.daiton;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -18,12 +16,19 @@ import java.io.InputStream;
 public class App extends Application {
 
     private static Scene scene;
+    private Game game;
 
     @Override
     public void start(Stage stage) throws IOException {
         setProperties(stage);
-        Game game = new Game();
+        game = new Game();
         game.setUp(stage);
+
+        Platform.setImplicitExit(false);
+        stage.setOnCloseRequest(event -> {
+            game.releaseMediaPlayer();
+            Platform.exit();
+        });
     }
 
     private static Image loadIcon() throws IOException {

@@ -1,7 +1,8 @@
 module cz.daiton {
     requires javafx.controls;
-    requires javafx.fxml;
+    requires javafx.graphics;
+    requires javafx.media;
 
-    opens cz.daiton to javafx.fxml;
+    opens cz.daiton to javafx.graphics;
     exports cz.daiton;
 }

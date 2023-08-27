@@ -7,11 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.net.URISyntaxException;
 import java.util.Random;
 
 public class  Game {
@@ -24,6 +27,7 @@ public class  Game {
     private boolean gameStarted = false;
     private boolean isPaused = false;
     private Timeline gameLoop;
+    private MediaPlayer mediaPlayer;
 
     public void setUp(Stage stage) {
         createCanvas();
@@ -39,6 +43,7 @@ public class  Game {
         stage.setScene(scene);
         stage.show();
 
+        createMediaPlayer();
         addMouseHandler(scene);
         addKeyHandler(scene);
         startGame();
@@ -128,12 +133,17 @@ public class  Game {
         CanvasRenderer.drawGameState(graphicsContext);
 
         if (isPaused) {
+            mediaPlayer.pause();
             CanvasRenderer.drawPauseScreen(graphicsContext);
+        }
+        else {
+            mediaPlayer.play();
         }
     }
 
     private void startGame() {
         if (gameStarted) {
+            mediaPlayer.play();
             gameLoop = new Timeline(new KeyFrame(Duration.millis(10), e -> updateGame()));
             gameLoop.setCycleCount(Timeline.INDEFINITE);
             gameLoop.play();
@@ -165,6 +175,7 @@ public class  Game {
 
     private void endGame() {
         gameStarted = false;
+        mediaPlayer.stop();
         CanvasRenderer.drawEndScreen(graphicsContext);
     }
 
@@ -197,6 +208,24 @@ public class  Game {
     private void stopGameLoop() {
         if (gameLoop != null) {
             gameLoop.stop();
+        }
+    }
+
+    private void createMediaPlayer() {
+        Media media = null;
+        try {
+            media = new Media(getClass().getResource("/cz/daiton/music.mp3").toURI().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+    }
+
+    public void releaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
         }
     }
 }
