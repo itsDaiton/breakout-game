@@ -12,6 +12,7 @@ The main motivation in this game is score. Player is given an amount of score af
 ## Controls
 - **P** - pause the game
 - **ENTER** - restart the game
+- **R** - reset the game
 
 ## Built With
 - Java 11
