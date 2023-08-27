@@ -7,7 +7,7 @@ public class Settings {
     public static final double WINDOW_HEIGHT = 750;
     public static final double CANVAS_WIDTH = 960;
     public static final double CANVAS_HEIGHT = 750;
-    public static final double TOP_OFFSET = 25;
+    public static final double TOP_OFFSET = 50;
     public static final double BALL_RADIUS = 8;
     public static final double BALL_SPEED = 3.5;
     public static final double PADDLE_WIDTH = 120;

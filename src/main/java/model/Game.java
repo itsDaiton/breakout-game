@@ -153,6 +153,10 @@ public class  Game {
                 ball.reset();
             }
 
+            if (checkForWin()) {
+                winGame();
+            }
+
             if (Stats.getLives() <= 0) {
                 endGame();
             }
@@ -172,6 +176,22 @@ public class  Game {
             }
         }
         Stats.reset();
+    }
+
+    private void winGame() {
+        gameStarted = false;
+        CanvasRenderer.drawWinScreen(graphicsContext);
+    }
+
+    private boolean checkForWin() {
+        for (int i = 0; i < Settings.BRICK_ROWS; i++) {
+            for (int j = 0; j < Settings.BRICK_ROWS; j++) {
+                if (!bricks[i][j].isDestroyed()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void stopGameLoop() {

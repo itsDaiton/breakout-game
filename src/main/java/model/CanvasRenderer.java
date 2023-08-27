@@ -33,7 +33,18 @@ public class CanvasRenderer {
                 graphicsContext,
                 "GAME OVER",
                 "Score: " + Stats.getScore(),
+                "Press 'Enter' to try again."
+        );
+    }
+
+    public static void drawWinScreen(GraphicsContext graphicsContext) {
+        drawOverlay(graphicsContext);
+        drawTexts(
+                graphicsContext,
+                "YOU WIN! CONGRATULATIONS.",
+                "Score: " + Stats.getScore(),
                 "Press 'Enter' to play again."
+
         );
     }
 
