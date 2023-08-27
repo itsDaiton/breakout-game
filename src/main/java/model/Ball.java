@@ -65,10 +65,10 @@ public class Ball {
         double ballBottom = y + r;
         double ballRight = x + r;
 
-        boolean collisionTop = ballBottom >= brickTop && ballLeft <= brickRight - 4.5 && ballRight >= brickLeft + 4.5 && ballBottom <= brickBottom;
-        boolean collisionLeft = ballRight >= brickRight && ballTop >= brickBottom + 4.5 && ballBottom <= brickTop - 4.5 && ballRight <= brickRight;
-        boolean collisionBottom = ballTop <= brickBottom && ballLeft <= brickRight - 4.5 && ballRight >= brickLeft + 4.5 && ballTop >= brickTop;
-        boolean collisionRight = ballLeft <= brickRight && ballTop >= brickBottom + 4.5 && ballBottom <= brickTop - 4.5 && ballLeft >= brickLeft;
+        boolean collisionTop = ballBottom >= brickTop && ballLeft <= brickRight - Settings.BRICK_OFFSET && ballRight >= brickLeft + Settings.BRICK_OFFSET && ballBottom <= brickBottom;
+        boolean collisionLeft = ballRight >= brickRight && ballTop >= brickBottom + Settings.BRICK_OFFSET && ballBottom <= brickTop - Settings.BRICK_OFFSET && ballRight <= brickRight;
+        boolean collisionBottom = ballTop <= brickBottom && ballLeft <= brickRight - Settings.BRICK_OFFSET && ballRight >= brickLeft + Settings.BRICK_OFFSET && ballTop >= brickTop;
+        boolean collisionRight = ballLeft <= brickRight && ballTop >= brickBottom + Settings.BRICK_OFFSET && ballBottom <= brickTop - Settings.BRICK_OFFSET && ballLeft >= brickLeft;
 
         boolean collided = collisionTop || collisionLeft || collisionBottom || collisionRight;
 
@@ -85,9 +85,8 @@ public class Ball {
     }
 
     public void collideBrick(Brick[][] bricks) {
-        for (int i = 0; i < bricks.length; i++) {
-            for (int j = 0; j < bricks[i].length; j++) {
-                Brick brick = bricks[i][j];
+        for (Brick[] value : bricks) {
+            for (Brick brick : value) {
                 if (checkBrick(brick)) {
                     brick.setDestroyed(true);
                     Stats.increaseScore(brick.getScore());
@@ -103,51 +102,11 @@ public class Ball {
         dirY = 1;
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
     public double getY() {
         return y;
     }
 
-    public void setY(double y) {
-        this.y = y;
-    }
-
     public double getR() {
         return r;
-    }
-
-    public void setR(double r) {
-        this.r = r;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public double getDirX() {
-        return dirX;
-    }
-
-    public void setDirX(double dirX) {
-        this.dirX = dirX;
-    }
-
-    public double getDirY() {
-        return dirY;
-    }
-
-    public void setDirY(double dirY) {
-        this.dirY = dirY;
     }
 }

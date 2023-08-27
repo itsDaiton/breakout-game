@@ -33,40 +33,16 @@ public class Brick {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
     public double getY() {
         return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
     public double getW() {
         return w;
     }
 
-    public void setW(double w) {
-        this.w = w;
-    }
-
     public double getH() {
         return h;
-    }
-
-    public void setH(double h) {
-        this.h = h;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public boolean isDestroyed() {
@@ -79,9 +55,5 @@ public class Brick {
 
     public int getScore() {
         return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

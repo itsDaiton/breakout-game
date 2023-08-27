@@ -43,31 +43,11 @@ public class Paddle {
         return y;
     }
 
-    public void setY(double y) {
-        this.y = y;
-    }
-
     public double getH() {
         return h;
     }
 
-    public void setH(double h) {
-        this.h = h;
-    }
-
     public double getW() {
         return w;
-    }
-
-    public void setW(double w) {
-        this.w = w;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 }
